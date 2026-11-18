@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Труд (технология) 8 класс: Технологии создания визуальных моделей и 3D-печать</title>
+  <style>
+    :root {
+      --bg: #f1f5f9;
+      --surface: #ffffff;
+      --surface-soft: #f8fafc;
+      --primary: #1d4ed8;
+      --primary-dark: #1e3a8a;
+      --primary-light: #dbeafe;
+      --accent: #0f766e;
+      --accent-light: #ccfbf1;
+      --success: #059669;
+      --success-light: #d1fae5;
+      --warning: #d97706;
+      --warning-light: #fef3c7;
+      --danger: #dc2626;
+      --danger-light: #fee2e2;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --border: #cbd5e1;
+      --radius: 16px;
+      --shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-bottom: 56px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 16px;
+    }
+
+    .topbar-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .topbar-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+
+    .timer-box {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      transition: width 0.35s ease;
+    }
+
+    .nav-pills {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-top: 10px;
+      scrollbar-width: none;
+    }
+
+    .nav-pills::-webkit-scrollbar {
+      display: none;
+    }
+
+    .nav-pill {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.83rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .nav-pill.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .nav-pill.done {
+      border-color: var(--success);
+      color: var(--success);
+      background: var(--success-light);
+    }
+
+    .nav-pill.active.done {
+      background: var(--success);
+      color: #fff;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 20px auto 0;
+      padding: 0 16px;
+    }
+
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(203, 213, 225, 0.75);
+    }
+
+    .module {
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .module.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-size: 1.52rem;
+      line-height: 1.25;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 1.28rem;
+      margin-bottom: 12px;
+      color: var(--primary-dark);
+    }
+
+    h3 {
+      font-size: 1.06rem;
+      margin: 16px 0 8px;
+    }
+
+    p {
+      margin-bottom: 12px;
+    }
+
+    ul, ol {
+      margin: 8px 0 14px 20px;
+    }
+
+    li {
+      margin-bottom: 6px;
+    }
+
+    .time-tag {
+      display: inline-block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--accent);
+      background: var(--accent-light);
+      padding: 3px 10px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .callout {
+      background: var(--surface-soft);
+      border-left: 4px solid var(--primary);
+      padding: 14px 16px;
+      border-radius: 0 12px 12px 0;
+      margin: 14px 0;
+    }
+
+    .callout.warn {
+      border-left-color: var(--warning);
+      background: var(--warning-light);
+    }
+
+    .callout.success {
+      border-left-color: var(--success);
+      background: var(--success-light);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+      margin: 14px 0;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+      gap: 12px;
+      margin: 14px 0;
+    }
+
+    .info-box {
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    .info-box strong {
+      display: block;
+      font-size: 1.02rem;
+      margin-bottom: 6px;
+      color: var(--primary-dark);
+    }
+
+    .pipeline-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 14px;
+      border-radius: 12px;
+      margin: 12px 0;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .pipe-step {
+      background: #1e293b;
+      border: 1px solid #38bdf8;
+      color: #38bdf8;
+      padding: 6px 12px;
+      border-radius: 8px;
+    }
+
+    .interactive-zone {
+      background: #f8fafc;
+      border: 2px dashed #93c5fd;
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-top: 18px;
+    }
+
+    .interactive-title {
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 18px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: #cbd5e1;
+    }
+
+    .btn-success {
+      background: var(--success);
+    }
+
+    .btn-success:hover {
+      background: #047857;
+    }
+
+    .btn-sm {
+      padding: 7px 14px;
+      font-size: 0.86rem;
+      border-radius: 8px;
+    }
+
+    .nav-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 22px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 1rem;
+      margin: 8px 0 12px;
+    }
+
+    /* Карточки выбора и сортировки */
+    .sort-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+
+    .sort-item-text {
+      margin-bottom: 10px;
+      font-size: 0.95rem;
+    }
+
+    .sort-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .choice-btn {
+      background: var(--surface-soft);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .choice-btn:hover {
+      background: #e2e8f0;
+    }
+
+    .choice-btn.selected {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .choice-btn.correct {
+      background: var(--success);
+      color: #fff;
+      border-color: var(--success);
+    }
+
+    .choice-btn.wrong {
+      background: var(--danger);
+      color: #fff;
+      border-color: var(--danger);
+    }
+
+    /* SVG сцены */
+    .svg-viewer {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .svg-viewer svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .control-group {
+      margin-bottom: 12px;
+    }
+
+    .control-group label {
+      display: block;
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    /* Итоговый тест */
+    .quiz-q {
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .quiz-opt {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 10px 14px;
+      margin-top: 8px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.93rem;
+      transition: all 0.15s;
+    }
+
+    .quiz-opt:hover {
+      border-color: var(--primary);
+    }
+
+    .quiz-opt.selected {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      font-weight: 600;
+    }
+
+    .quiz-opt.correct {
+      border-color: var(--success);
+      background: var(--success-light);
+      color: #065f46;
+      font-weight: 700;
+    }
+
+    .quiz-opt.wrong {
+      border-color: var(--danger);
+      background: var(--danger-light);
+      color: #991b1b;
+    }
+
+    /* Сертификат */
+    .cert-box {
+      border: 3px solid var(--primary);
+      background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%);
+      border-radius: 18px;
+      padding: 24px;
+      text-align: center;
+      margin-top: 18px;
+    }
+
+    .cert-grade {
+      display: inline-block;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--success);
+      background: var(--success-light);
+      padding: 8px 22px;
+      border-radius: 12px;
+      margin: 12px 0;
+    }
+
+    .feedback {
+      margin-top: 10px;
+      font-weight: 600;
+      font-size: 0.93rem;
+    }
+
+    @media (max-width: 600px) {
+      .card { padding: 16px; }
+      h1 { font-size: 1.32rem; }
+      h2 { font-size: 1.16rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-row">
+        <span class="badge">Труд (технология) • 8 класс</span>
+        <span class="timer-box" id="timerDisplay">Время урока: 00:00 / 45:00</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressBar"></div>
+      </div>
+      <nav class="nav-pills" id="navPills">
+        <button class="nav-pill active" onclick="goToStep(0)">Старт</button>
+        <button class="nav-pill" onclick="goToStep(1)">1. Визуальные 3D-модели</button>
+        <button class="nav-pill" onclick="goToStep(2)">2. Практика: CAD-редактор</button>
+        <button class="nav-pill" onclick="goToStep(3)">3. Практика: Слайсер и печать</button>
+        <button class="nav-pill" onclick="goToStep(4)">4. Итоговый контроль</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- ШАГ 0: ВВЕДЕНИЕ -->
+    <section class="module active" id="step-0">
+      <div class="card">
+        <span class="time-tag">Урок и практическая работа • 45 минут</span>
+        <h1>Технологии создания визуальных моделей. Инструменты ПО для создания и печати 3D-моделей</h1>
+        <p><strong>Визуальная (трёхмерная) модель</strong> — это цифровой объёмный образ объекта, который можно осмотреть со всех сторон, испытать на прочность, изменить по размерам и воплотить в реальном материале на 3D-принтере.</p>
+        <p>На этом уроке ты изучишь три основные технологии создания 3D-моделей и выполнишь <strong>практическую работу</strong> на виртуальных тренажёрах: сконструируешь деталь по техническому заданию и настроишь параметры 3D-печати в симуляторе слайсера.</p>
+
+        <div class="callout">
+          <strong>Как пройти урок и получить оценку:</strong><br />
+          1. Изучи теорию в 1-м модуле и выполни классификатор технологий.<br />
+          2. Выполни обе части практической работы (модули 2 и 3) до зелёной отметки.<br />
+          3. Пройди итоговый тест из 8 вопросов и отправь скриншот карточки результата учителю.
+        </div>
+
+        <label for="studentNameInput"><strong>Введи фамилию, имя и класс перед началом:</strong></label>
+        <input type="text" id="studentNameInput" class="input-field" placeholder="Например: Орлов Максим, 8-А" />
+
+        <div class="nav-footer">
+          <span></span>
+          <button class="btn" onclick="startLesson()">Начать урок →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ШАГ 1: ТЕХНОЛОГИИ СОЗДАНИЯ ВИЗУАЛЬНЫХ 3D-МОДЕЛЕЙ -->
+    <section class="module" id="step-1">
+      <div class="card">
+        <span class="time-tag">Модуль 1 • Рекомендуемое время: 10 минут</span>
+        <h2>1. Технологии создания визуальных 3D-моделей</h2>
+        <p>Выбор программного обеспечения зависит от того, для какой цели создаётся трёхмерная модель — для точного производства на станке, для компьютерной игры или для копирования существующего предмета.</p>
+
+        <div class="grid-3">
+          <div class="info-box">
+            <strong>1. Твердотельное САПР-моделирование (CAD)</strong>
+            Деталь строится по точным чертежам, размерам и геометрическим правилам. Применяется в машиностроении, архитектуре и функциональной 3D-печати.<br />
+            <em>ПО:</em> КОМПАС-3D, Tinkercad, FreeCAD, Fusion 360.
+          </div>
+          <div class="info-box">
+            <strong>2. Полигональное моделирование и скульптинг</strong>
+            Поверхность объекта формируется из сетки многоугольников (полигонов) или «лепится» как цифровая глина. Используется в кино, играх и дизайне персонажей.<br />
+            <em>ПО:</em> Blender, 3ds Max, ZBrush.
+          </div>
+          <div class="info-box">
+            <strong>3. 3D-сканирование и фотограмметрия</strong>
+            Автоматическое получение цифровой модели готового физического предмета с помощью лазерного сканера или серии фотографий с разных ракурсов.<br />
+            <em>ПО:</em> Meshroom, EXScan, Metashape.
+          </div>
+        </div>
+
+        <div class="callout">
+          <strong>Параметризация в CAD:</strong> Главное преимущество инженерных САПР — <em>параметричность</em>. Если изменить диаметр отверстия или толщину стенки в дереве построения, программа автоматически пересчитает всю модель без необходимости перерисовывать её заново.
+        </div>
+
+        <div class="interactive-zone">
+          <div class="interactive-title">Тренажёр: Подбери технологию моделирования под задачу</div>
+          <p style="font-size: 0.92rem;">Определи, какой способ создания 3D-модели оптимален в каждой из 5 ситуаций:</p>
+          <div id="m1Container"></div>
+          <button class="btn btn-sm" onclick="checkM1()">Проверить ответы</button>
+          <div class="feedback" id="m1Feedback"></div>
+        </div>
+
+        <div class="nav-footer">
+          <button class="btn btn-secondary" onclick="goToStep(0)">← Назад</button>
+          <button class="btn" onclick="goToStep(2)">К Практической работе (Часть 1: CAD) →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ШАГ 2: ПРАКТИЧЕСКАЯ РАБОТА — ИНСТРУМЕНТЫ ПО ДЛЯ СОЗДАНИЯ 3D-МОДЕЛЕЙ -->
+    <section class="module" id="step-2">
+      <div class="card">
+        <span class="time-tag">Практическая работа (Часть 1) • Рекомендуемое время: 12 минут</span>
+        <h2>2. Инструменты ПО для создания 3D-моделей</h2>
+        <p>Чтобы уверенно работать в любом 3D-редакторе (от школьного Tinkercad до профессионального КОМПАС-3D), используют четыре базовые группы инструментов:</p>
+
+        <div class="grid-2">
+          <div class="info-box">
+            <strong>Навигация и рабочая плоскость</strong>
+            <em>Орбита (вращение камеры)</em>, <em>панорамирование (сдвиг)</em> и <em>масштабирование</em> позволяют осматривать модель со всех сторон, а <em>рабочая плоскость</em> задаёт уровень, на котором создаются новые элементы.
+          </div>
+          <div class="info-box">
+            <strong>Эскизирование и формообразование</strong>
+            Создание объёмных фигур из плоских контуров (эскизов) с помощью операций <strong>Выдавливание (Extrude)</strong> и <strong>Вращение (Revolve)</strong>, а также комбинирование готовых примитивов.
+          </div>
+          <div class="info-box">
+            <strong>Модификаторы кромок</strong>
+            <strong>Скругление (Fillet)</strong> заменяет острый угол плавной дугой (повышает прочность детали), а <strong>Фаска (Chamfer)</strong> срезает кромку под углом 45°.
+          </div>
+          <div class="info-box">
+            <strong>Булевы (логические) операции</strong>
+            <em>Объединение (группировка)</em> сливает несколько тел в единую деталь, а <em>Вычитание</em> позволяет вырезать сквозные и глухие отверстия заданного диаметра.
+          </div>
+        </div>
+
+        <div class="interactive-zone">
+          <div class="interactive-title">Практическое задание №1: Виртуальный 3D-конструктор детали</div>
+          <div class="callout warn" style="margin: 8px 0 12px; font-size: 0.92rem;">
+            <strong>Техническое задание (ТЗ):</strong> Спроектируй в виртуальном редакторе табличку-бейдж для школьного оборудования, применив следующие инструменты:<br />
+            1. Обработай углы основания инструментом <strong>Скругление (Fillet)</strong>.<br />
+            2. Задай высоту выдавливания (Extrude) равную <strong>6 мм</strong>.<br />
+            3. Добавь крепёжное отверстие инструментом <strong>Вычитание (Отверстие Ø 5 мм)</strong>.<br />
+            4. Нанеси объёмную маркировку инструментом <strong>Выдавленный текст</strong>.
+          </div>
+
+          <div class="grid-2" style="align-items: center;">
+            <div class="svg-viewer" id="cadViewportSvg"></div>
+            <div>
+              <div class="control-group">
+                <label>1. Обработка углов основания:</label>
+                <div class="sort-buttons" id="cadCornerBtns">
+                  <button class="choice-btn selected" onclick="setCadProp('corner', 'sharp', this)">Острые (90°)</button>
+                  <button class="choice-btn" onclick="setCadProp('corner', 'chamfer', this)">Фаска (Chamfer)</button>
+                  <button class="choice-btn" onclick="setCadProp('corner', 'fillet', this)">Скругление (Fillet)</button>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label>2. Высота выдавливания (Extrude):</label>
+                <div class="sort-buttons" id="cadHeightBtns">
+                  <button class="choice-btn selected" onclick="setCadProp('height', 3, this)">3 мм (тонкая)</button>
+                  <button class="choice-btn" onclick="setCadProp('height', 6, this)">6 мм (усиленная)</button>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label>3. Булево вычитание (отверстие):</label>
+                <div class="sort-buttons" id="cadHoleBtns">
+                  <button class="choice-btn selected" onclick="setCadProp('hole', false, this)">Без отверстия</button>
+                  <button class="choice-btn" onclick="setCadProp('hole', true, this)">Вырезать отверстие Ø 5 мм</button>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label>4. Рельефная маркировка:</label>
+                <div class="sort-buttons" id="cadTextBtns">
+                  <button class="choice-btn selected" onclick="setCadProp('label', false, this)">Гладкая поверхность</button>
+                  <button class="choice-btn" onclick="setCadProp('label', true, this)">Выдавить текст «8 КЛАСС»</button>
+                </div>
+              </div>
+
+              <button class="btn btn-sm" onclick="verifyCadModel()">Проверить соответствие ТЗ</button>
+            </div>
+          </div>
+          <div class="feedback" id="m2Feedback"></div>
+        </div>
+
+        <div class="nav-footer">
+          <button class="btn btn-secondary" onclick="goToStep(1)">← Назад</button>
+          <button class="btn" onclick="goToStep(3)">К Практической работе (Часть 2: Слайсер) →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ШАГ 3: ПРАКТИЧЕСКАЯ РАБОТА — ПОДГОТОВКА И ПЕЧАТЬ 3D-МОДЕЛЕЙ (СЛАЙСЕР) -->
+    <section class="module" id="step-3">
+      <div class="card">
+        <span class="time-tag">Практическая работа (Часть 2) • Рекомендуемое время: 15 минут</span>
+        <h2>3. Инструменты ПО для подготовки к 3D-печати (Слайсинг)</h2>
+        <p>3D-принтер не понимает файлы внутренних форматов CAD-программ. Чтобы напечатать модель по технологии послойного наплавления (FDM), она проходит обязательный технологический маршрут:</p>
+
+        <div class="pipeline-bar">
+          <span class="pipe-step">1. CAD-модель</span>
+          <span>→</span>
+          <span class="pipe-step">2. Экспорт (.STL / .3MF)</span>
+          <span>→</span>
+          <span class="pipe-step">3. Слайсер (Cura / Orca)</span>
+          <span>→</span>
+          <span class="pipe-step">4. Управляющий код (.GCODE)</span>
+        </div>
+
+        <p><strong>Слайсер</strong> (от англ. <em>slice</em> — нарезать) — это программа, которая разрезает полигональную 3D-модель (<code>.stl</code>) на сотни тонких горизонтальных слоёв и рассчитывает траекторию движения печатающей головки, температуру и скорость подачи пластика.</p>
+
+        <div class="grid-2">
+          <div class="info-box">
+            <strong>Высота слоя (Layer Height)</strong>
+            Толщина одного слоя пластика (обычно <strong>0,12–0,28 мм</strong>). Меньшая высота даёт гладкую поверхность, но увеличивает время печати в 2 раза.
+          </div>
+          <div class="info-box">
+            <strong>Плотность заполнения (Infill)</strong>
+            Внутри деталь не сплошная, а заполнена решёткой (сетка, гироид). Для сувениров хватает <strong>15–20%</strong>, для нагруженных деталей ставят <strong>50–80%</strong>.
+          </div>
+          <div class="info-box">
+            <strong>Поддержки (Supports)</strong>
+            Временные опоры, которые печатаются под нависающими частями модели (с углом наклона более 45°), чтобы расплавленный пластик не провисал в воздухе.
+          </div>
+          <div class="info-box">
+            <strong>Адгезия к столу (Кайма / Brim)</strong>
+            Расширение первого слоя вокруг основания детали, которое надёжно удерживает её на нагреваемом столе принтера и предотвращает отлипание углов.
+          </div>
+        </div>
+
+        <div class="interactive-zone">
+          <div class="interactive-title">Практическое задание №2: Виртуальный слайсер 3D-печати</div>
+          <div class="callout warn" style="margin: 8px 0 12px; font-size: 0.92rem;">
+            <strong>Задача технолога:</strong> Подготовь к печати <strong>нагруженный Г-образный кронштейн</strong> (справа в разрезе). Модель имеет длинный горизонтальный навес и испытывает механическую нагрузку:<br />
+            • Установи высокую прочность: заполнение <strong>50%</strong> или <strong>80%</strong>.<br />
+            • Предотврати провисание навеса: включи <strong>Поддержки</strong>.<br />
+            • Защити деталь от отлипания: включи <strong>Кайму (Brim)</strong>.
+          </div>
+
+          <div class="grid-2" style="align-items: center;">
+            <div>
+              <div class="svg-viewer" id="slicerViewportSvg"></div>
+              <div class="info-box" style="margin-top: 10px; font-size: 0.9rem;" id="slicerTelemetry"></div>
+            </div>
+
+            <div>
+              <div class="control-group">
+                <label>Высота слоя (Layer Height):</label>
+                <div class="sort-buttons" id="slLayerBtns">
+                  <button class="choice-btn" onclick="setSlicerProp('layer', 0.12, this)">0,12 мм (Точно)</button>
+                  <button class="choice-btn selected" onclick="setSlicerProp('layer', 0.20, this)">0,20 мм (Стандарт)</button>
+                  <button class="choice-btn" onclick="setSlicerProp('layer', 0.28, this)">0,28 мм (Быстро)</button>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label>Плотность заполнения (Infill):</label>
+                <div class="sort-buttons" id="slInfillBtns">
+                  <button class="choice-btn selected" onclick="setSlicerProp('infill', 15, this)">15% (Декор)</button>
+                  <button class="choice-btn" onclick="setSlicerProp('infill', 50, this)">50% (Прочный)</button>
+                  <button class="choice-btn" onclick="setSlicerProp('infill', 80, this)">80% (Усиленный)</button>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label>Генерация поддержек (Supports):</label>
+                <div class="sort-buttons" id="slSupBtns">
+                  <button class="choice-btn selected" onclick="setSlicerProp('supports', false, this)">Выключены</button>
+                  <button class="choice-btn" onclick="setSlicerProp('supports', true, this)">Включены</button>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label>Адгезия к столу — Кайма (Brim):</label>
+                <div class="sort-buttons" id="slBrimBtns">
+                  <button class="choice-btn selected" onclick="setSlicerProp('brim', false, this)">Выключена</button>
+                  <button class="choice-btn" onclick="setSlicerProp('brim', true, this)">Включена (8 мм)</button>
+                </div>
+              </div>
+
+              <button class="btn btn-sm" onclick="verifySlicerSetup()">Сгенерировать G-code и проверить</button>
+            </div>
+          </div>
+          <div class="feedback" id="m3Feedback"></div>
+        </div>
+
+        <div class="nav-footer">
+          <button class="btn btn-secondary" onclick="goToStep(2)">← Назад</button>
+          <button class="btn" onclick="goToStep(4)">Перейти к итоговому контролю →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ШАГ 4: ИТОГОВЫЙ КОНТРОЛЬ -->
+    <section class="module" id="step-4">
+      <div class="card">
+        <span class="time-tag">Модуль 4 • Рекомендуемое время: 8 минут</span>
+        <h2>4. Итоговый контроль по уроку и практической работе</h2>
+        <p>Ответь на 8 контрольных вопросов. После проверки сформируется именная карточка с оценкой и кодом проверки для учителя.</p>
+
+        <div id="finalQuizContainer"></div>
+
+        <button class="btn btn-success" style="width: 100%; margin-top: 10px;" onclick="finishLesson()">Завершить работу и получить оценку</button>
+
+        <div id="certificateSection" style="display: none;">
+          <div class="cert-box">
+            <div style="font-size: 0.88rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700;">
+              Отчёт о прохождении урока и практической работы • Труд (технология) 8 класс
+            </div>
+            <h2 id="certStudentName" style="margin: 8px 0; color: var(--text);">Ученик 8 класса</h2>
+            <p style="margin-bottom: 4px;">Тема: «Инструменты ПО для создания и печати 3D-моделей»</p>
+            <div class="cert-grade" id="certGradeText">Оценка: 5 (Отлично)</div>
+            <p id="certStats" style="font-weight: 600;"></p>
+            <p id="certCode" style="font-family: monospace; font-size: 0.9rem; color: var(--text-muted);"></p>
+            <div class="callout success" style="text-align: left; margin-top: 12px;">
+              Сделай скриншот этой карточки и отправь учителю для выставления оценки в журнал!
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-footer">
+          <button class="btn btn-secondary" onclick="goToStep(3)">← Вернуться к слайсеру</button>
+          <button class="btn btn-secondary btn-sm" onclick="resetAll()">Пройти заново</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // --- СОСТОЯНИЕ ---
+    const state = {
+      currentStep: 0,
+      completedSteps: [false, false, false, false, false],
+      secondsElapsed: 0,
+      studentName: "",
+      cad: { corner: "sharp", height: 3, hole: false, label: false },
+      slicer: { layer: 0.20, infill: 15, supports: false, brim: false }
+    };
+
+    // --- ТАЙМЕР ---
+    setInterval(() => {
+      state.secondsElapsed++;
+      const m = String(Math.floor(state.secondsElapsed / 60)).padStart(2, "0");
+      const s = String(state.secondsElapsed % 60).padStart(2, "0");
+      document.getElementById("timerDisplay").textContent = `Время урока: ${m}:${s} / 45:00`;
+    }, 1000);
+
+    // --- НАВИГАЦИЯ ---
+    function goToStep(idx) {
+      document.querySelectorAll(".module").forEach((el, i) => el.classList.toggle("active", idx === i));
+      document.querySelectorAll(".nav-pill").forEach((pill, i) => {
+        pill.classList.toggle("active", idx === i);
+        pill.classList.toggle("done", state.completedSteps[i]);
+      });
+      state.currentStep = idx;
+      updateProgress();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function markStepDone(idx) {
+      state.completedSteps[idx] = true;
+      const pills = document.querySelectorAll(".nav-pill");
+      if (pills[idx]) pills[idx].classList.add("done");
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const done = state.completedSteps.filter(Boolean).length;
+      const pct = Math.min(100, Math.round((done / 4) * 100));
+      document.getElementById("progressBar").style.width = `${pct}%`;
+    }
+
+    function startLesson() {
+      const val = document.getElementById("studentNameInput").value.trim();
+      state.studentName = val || "Ученик 8 класса";
+      markStepDone(0);
+      goToStep(1);
+    }
+
+    // --- МОДУЛЬ 1: КЛАССИФИКАТОР ТЕХНОЛОГИЙ ---
+    const m1Data = [
+      {
+        text: "Спроектировать корпус для электронного прибора с точными посадочными отверстиями под винты М3",
+        answer: "Твердотельное САПР-моделирование (CAD)"
+      },
+      {
+        text: "Создать цифровую копию старинной музейной скульптуры сложной органической формы без чертежей",
+        answer: "3D-сканирование / фотограмметрия"
+      },
+      {
+        text: "Слепить фантастического персонажа с плавной мимикой и складками одежды для мультфильма",
+        answer: "Полигональное моделирование и скульптинг"
+      },
+      {
+        text: "Разработать параметрическую шестерню, в которой можно быстро менять число зубьев и модуль",
+        answer: "Твердотельное САПР-моделирование (CAD)"
+      },
+      {
+        text: "Оцифровать сломанную пластиковую ручку бытового прибора для последующего реверс-инжиниринга",
+        answer: "3D-сканирование / фотограмметрия"
+      }
+    ];
+    const m1User = {};
+
+    function renderM1() {
+      const box = document.getElementById("m1Container");
+      box.innerHTML = "";
+      const opts = [
+        "Твердотельное САПР-моделирование (CAD)",
+        "Полигональное моделирование и скульптинг",
+        "3D-сканирование / фотограмметрия"
+      ];
+      m1Data.forEach((item, idx) => {
+        const div = document.createElement("div");
+        div.className = "sort-item";
+        div.innerHTML = `
+          <div class="sort-item-text"><strong>${idx + 1}.</strong> ${item.text}</div>
+          <div class="sort-buttons" id="m1-btns-${idx}">
+            ${opts.map(o => `<button class="choice-btn" onclick="selM1(${idx}, '${o}', this)">${o}</button>`).join("")}
+          </div>
+        `;
+        box.appendChild(div);
+      });
+    }
+
+    function selM1(idx, opt, btn) {
+      m1User[idx] = opt;
+      document.getElementById(`m1-btns-${idx}`).querySelectorAll(".choice-btn").forEach(b => b.classList.remove("selected", "correct", "wrong"));
+      btn.classList.add("selected");
+    }
+
+    function checkM1() {
+      let ok = 0;
+      m1Data.forEach((item, idx) => {
+        const chosen = m1User[idx];
+        document.getElementById(`m1-btns-${idx}`).querySelectorAll(".choice-btn").forEach(b => {
+          b.classList.remove("selected", "correct", "wrong");
+          if (b.textContent === chosen) {
+            if (chosen === item.answer) { b.classList.add("correct"); ok++; }
+            else { b.classList.add("wrong"); }
+          }
+        });
+      });
+      const fb = document.getElementById("m1Feedback");
+      if (ok === m1Data.length) {
+        fb.style.color = "var(--success)";
+        fb.textContent = "Отлично! Все 5 задач сопоставлены с технологиями 3D-моделирования верно.";
+        markStepDone(1);
+      } else {
+        fb.style.color = "var(--warning)";
+        fb.textContent = `Правильно: ${ok} из ${m1Data.length}. Проверь выделенные красным пункты.`;
+      }
+    }
+    renderM1();
+
+    // --- МОДУЛЬ 2: ВИРТУАЛЬНЫЙ 3D-КОНСТРУКТОР (CAD) ---
+    function setCadProp(prop, val, btn) {
+      state.cad[prop] = val;
+      const groupMap = {
+        corner: "cadCornerBtns",
+        height: "cadHeightBtns",
+        hole: "cadHoleBtns",
+        label: "cadTextBtns"
+      };
+      document.getElementById(groupMap[prop]).querySelectorAll(".choice-btn").forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+      renderCadViewport();
+    }
+
+    function renderCadViewport() {
+      const { corner, height, hole, label } = state.cad;
+      const extOffset = height === 6 ? 18 : 9;
+      const rx = corner === "fillet" ? 26 : 0;
+
+      let shapeTop = "";
+      let shapeSide = "";
+
+      if (corner === "chamfer") {
+        // Скошенные углы (фаска)
+        shapeTop = `<polygon points="65,45 255,45 275,65 275,145 255,165 65,165 45,145 45,65" fill="#3b82f6" stroke="#1e3a8a" stroke-width="2.5"/>`;
+        shapeSide = `<polygon points="45,145 65,165 255,165 275,145 275,${145 + extOffset} 255,${165 + extOffset} 65,${165 + extOffset} 45,${145 + extOffset}" fill="#1d4ed8" stroke="#1e3a8a" stroke-width="2"/>`;
+      } else {
+        shapeTop = `<rect x="45" y="45" width="230" height="120" rx="${rx}" ry="${rx}" fill="#3b82f6" stroke="#1e3a8a" stroke-width="2.5"/>`;
+        shapeSide = `<rect x="45" y="${45 + extOffset}" width="230" height="120" rx="${rx}" ry="${rx}" fill="#1d4ed8" stroke="#1e3a8a" stroke-width="2"/>`;
+      }
+
+      const holeSvg = hole
+        ? `<circle cx="78" cy="105" r="14" fill="#f8fafc" stroke="#1e3a8a" stroke-width="2.5"/><text x="78" y="135" font-size="10" font-weight="bold" text-anchor="middle" fill="#ffffff">Ø 5 мм</text>`
+        : "";
+
+      const textSvg = label
+        ? `<text x="172" y="113" font-size="22" font-weight="900" text-anchor="middle" fill="#fef3c7" stroke="#92400e" stroke-width="0.8" letter-spacing="1">8 КЛАСС</text>`
+        : "";
+
+      document.getElementById("cadViewportSvg").innerHTML = `
+        <svg viewBox="0 0 320 215" style="max-width:320px;">
+          <text x="160" y="22" font-size="12" font-weight="bold" text-anchor="middle" fill="#475569">Рабочая область САПР (Вид 2.5D) • Высота Z = ${height} мм</text>
+          ${shapeSide}
+          ${shapeTop}
+          ${holeSvg}
+          ${textSvg}
+          <text x="160" y="204" font-size="11" font-weight="bold" text-anchor="middle" fill="#1e3a8a">Габариты: 80 × 40 × ${height} мм</text>
+        </svg>
+      `;
+    }
+    renderCadViewport();
+
+    function verifyCadModel() {
+      const { corner, height, hole, label } = state.cad;
+      const fb = document.getElementById("m2Feedback");
+      const missing = [];
+      if (corner !== "fillet") missing.push("скругление углов (Fillet)");
+      if (height !== 6) missing.push("высоту выдавливания 6 мм");
+      if (!hole) missing.push("вычитание отверстия Ø 5 мм");
+      if (!label) missing.push("выдавленный текст «8 КЛАСС»");
+
+      if (missing.length === 0) {
+        fb.style.color = "var(--success)";
+        fb.textContent = "Превосходно! 3D-модель полностью соответствует техническому заданию и готова к экспорту в .STL!";
+        markStepDone(2);
+      } else {
+        fb.style.color = "var(--warning)";
+        fb.textContent = `Модель не завершена. По ТЗ осталось применить: ${missing.join(", ")}.`;
+      }
+    }
+
+    // --- МОДУЛЬ 3: ВИРТУАЛЬНЫЙ СЛАЙСЕР (SVG-РАЗРЕЗ) ---
+    function setSlicerProp(prop, val, btn) {
+      state.slicer[prop] = val;
+      const groupMap = {
+        layer: "slLayerBtns",
+        infill: "slInfillBtns",
+        supports: "slSupBtns",
+        brim: "slBrimBtns"
+      };
+      document.getElementById(groupMap[prop]).querySelectorAll(".choice-btn").forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+      renderSlicerViewport();
+    }
+
+    function renderSlicerViewport() {
+      const { layer, infill, supports, brim } = state.slicer;
+
+      // Расчёт времени и массы пластика
+      const layerFactor = layer === 0.12 ? 1.65 : (layer === 0.20 ? 1.0 : 0.72);
+      const infillMass = Math.round(12 + infill * 0.28);
+      const supMass = supports ? 6 : 0;
+      const brimMass = brim ? 2 : 0;
+      const totalGrams = infillMass + supMass + brimMass;
+      const totalMins = Math.round((28 + infill * 0.35 + (supports ? 12 : 0)) * layerFactor);
+
+      // Шаг горизонтальных линий слоёв
+      const layerStep = layer === 0.12 ? 4 : (layer === 0.20 ? 7 : 11);
+      let layerLines = "";
+      for (let y = 38; y < 175; y += layerStep) {
+        if (y < 76) {
+          layerLines += `<line x1="75" y1="${y}" x2="245" y2="${y}" stroke="#1e40af" stroke-width="0.9" opacity="0.55"/>`;
+        } else {
+          layerLines += `<line x1="75" y1="${y}" x2="135" y2="${y}" stroke="#1e40af" stroke-width="0.9" opacity="0.55"/>`;
+        }
+      }
+
+      // Сетка заполнения (Infill)
+      const infStep = infill === 15 ? 18 : (infill === 50 ? 10 : 6);
+      let infillLines = "";
+      for (let x = 80; x < 132; x += infStep) {
+        infillLines += `<line x1="${x}" y1="40" x2="${x}" y2="173" stroke="#0d9488" stroke-width="1.2"/>`;
+      }
+      for (let x = 135; x < 242; x += infStep) {
+        infillLines += `<line x1="${x}" y1="40" x2="${x}" y2="74" stroke="#0d9488" stroke-width="1.2"/>`;
+      }
+
+      // Поддержки под навесом (x: 138..243, y: 76..175)
+      let supSvg = "";
+      if (supports) {
+        supSvg += `<rect x="138" y="77" width="105" height="98" fill="#fef3c7" stroke="#d97706" stroke-width="1.2"/>`;
+        for (let sx = 146; sx <= 238; sx += 11) {
+          supSvg += `<line x1="${sx}" y1="77" x2="${sx}" y2="175" stroke="#d97706" stroke-width="2" stroke-dasharray="4,2"/>`;
+        }
+        supSvg += `<text x="190" y="130" font-size="11" font-weight="bold" text-anchor="middle" fill="#92400e">Поддержки</text>`;
+      } else {
+        // Иллюстрация провисания пластика без поддержек
+        supSvg += `<path d="M 140 76 Q 190 98 242 76" fill="none" stroke="#dc2626" stroke-width="3" stroke-dasharray="3,2"/>`;
+        supSvg += `<text x="192" y="112" font-size="11" font-weight="bold" text-anchor="middle" fill="#dc2626">⚠ Провисание пластика!</text>`;
+      }
+
+      // Кайма (Brim) на столе (y = 175)
+      const brimSvg = brim
+        ? `<line x1="52" y1="175" x2="155" y2="175" stroke="#059669" stroke-width="4"/><text x="64" y="191" font-size="10" font-weight="bold" fill="#059669">Кайма (Brim)</text>`
+        : "";
+
+      document.getElementById("slicerViewportSvg").innerHTML = `
+        <svg viewBox="0 0 320 205" style="max-width:320px;">
+          <text x="160" y="18" font-size="12" font-weight="bold" text-anchor="middle" fill="#475569">Предпросмотр слоёв G-code (Разрез)</text>
+          <!-- Стол принтера -->
+          <line x1="25" y1="176" x2="295" y2="176" stroke="#334155" stroke-width="3"/>
+          ${brimSvg}
+          ${supSvg}
+          <!-- Контур Г-образного кронштейна -->
+          <polygon points="75,36 245,36 245,76 135,76 135,175 75,175" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2.5"/>
+          ${infillLines}
+          ${layerLines}
+        </svg>
+      `;
+
+      const strengthLabel = infill === 15 ? "Низкая (только для декора)" : (infill === 50 ? "Высокая (подходит для нагрузки)" : "Максимальная");
+      document.getElementById("slicerTelemetry").innerHTML = `
+        <strong>Расчёт слайсера (.GCODE):</strong>
+        Время печати: <strong>~${totalMins} мин</strong> &nbsp;|&nbsp; Расход пластика: <strong>${totalGrams} г</strong><br />
+        Прочность детали: <strong>${strengthLabel}</strong><br />
+        Защита навеса: <strong style="color:${supports ? 'var(--success)' : 'var(--danger)'};">${supports ? 'Поддержки установлены' : 'Риск брака (нет опор)'}</strong>
+      `;
+    }
+    renderSlicerViewport();
+
+    function verifySlicerSetup() {
+      const { infill, supports, brim } = state.slicer;
+      const fb = document.getElementById("m3Feedback");
+      const issues = [];
+      if (infill < 50) issues.push("увеличить заполнение до 50% или 80% для прочности");
+      if (!supports) issues.push("включить поддержки под горизонтальным навесом");
+      if (!brim) issues.push("включить кайму (Brim) для надёжного удержания на столе");
+
+      if (issues.length === 0) {
+        fb.style.color = "var(--success)";
+        fb.textContent = "Управляющий файл .GCODE успешно сгенерирован! Все технологические требования соблюдены.";
+        markStepDone(3);
+      } else {
+        fb.style.color = "var(--warning)";
+        fb.textContent = `Параметры требуют доработки: необходимо ${issues.join("; ")}.`;
+      }
+    }
+
+    // --- МОДУЛЬ 4: ИТОГОВЫЙ ТЕСТ ---
+    const quizData = [
+      {
+        q: "1. Какая технология 3D-моделирования применяется для проектирования точных инженерных деталей по размерам?",
+        options: [
+          "Твердотельное параметрическое САПР-моделирование (CAD)",
+          "Цифровой скульптинг персонажей",
+          "Обработка растровых фотографий"
+        ],
+        correct: 0
+      },
+      {
+        q: "2. В чём заключается главное преимущество параметрического 3D-моделирования?",
+        options: [
+          "Модель не нужно сохранять на диск",
+          "При изменении одного размера программа автоматически перестраивает связанные элементы модели",
+          "Программа работает без использования координат"
+        ],
+        correct: 1
+      },
+      {
+        q: "3. Как называется операция в 3D-редакторе, которая плавно закругляет острый угол или ребро детали?",
+        options: ["Выдавливание (Extrude)", "Скругление (Fillet)", "Панорамирование"],
+        correct: 1
+      },
+      {
+        q: "4. Какую логическую (булеву) операцию используют для создания сквозного отверстия в 3D-детали?",
+        options: ["Объединение", "Вычитание", "Копирование"],
+        correct: 1
+      },
+      {
+        q: "5. В какой стандартный формат чаще всего экспортируют 3D-модель для передачи в программу-слайсер?",
+        options: [".STL или .3MF", ".MP3 или .WAV", ".DOCX или .TXT"],
+        correct: 0
+      },
+      {
+        q: "6. Для чего предназначена программа-слайсер (например, Cura или OrcaSlicer)?",
+        options: [
+          "Для рисования плоских векторных логотипов",
+          "Для нарезки 3D-модели на слои и генерации управляющего кода (.gcode) для 3D-принтера",
+          "Для очистки сопла принтера от пластика"
+        ],
+        correct: 1
+      },
+      {
+        q: "7. Зачем при настройке 3D-печати включают генерацию поддержек (Supports)?",
+        options: [
+          "Чтобы уменьшить расход пластика",
+          "Чтобы нависающие элементы модели не провисали в воздухе при печати",
+          "Чтобы деталь быстрее остыла после печати"
+        ],
+        correct: 1
+      },
+      {
+        q: "8. Как изменится процесс 3D-печати, если уменьшить высоту слоя с 0,28 мм до 0,12 мм?",
+        options: [
+          "Поверхность станет более гладкой, но время печати существенно увеличится",
+          "Деталь напечатается в 2 раза быстрее, но станет более грубой",
+          "Изменится только цвет пластика"
+        ],
+        correct: 0
+      }
+    ];
+    const quizAnswers = {};
+
+    function renderQuiz() {
+      const box = document.getElementById("finalQuizContainer");
+      box.innerHTML = "";
+      quizData.forEach((item, qIdx) => {
+        const div = document.createElement("div");
+        div.className = "quiz-q";
+        div.innerHTML = `
+          <div><strong>${item.q}</strong></div>
+          <div id="quiz-opts-${qIdx}">
+            ${item.options.map((opt, oIdx) => `
+              <button class="quiz-opt" onclick="selectQuiz(${qIdx}, ${oIdx}, this)">${opt}</button>
+            `).join("")}
+          </div>
+        `;
+        box.appendChild(div);
+      });
+    }
+
+    function selectQuiz(qIdx, oIdx, btn) {
+      quizAnswers[qIdx] = oIdx;
+      const box = document.getElementById(`quiz-opts-${qIdx}`);
+      box.querySelectorAll(".quiz-opt").forEach(b => b.classList.remove("selected", "correct", "wrong"));
+      btn.classList.add("selected");
+    }
+
+    function finishLesson() {
+      if (Object.keys(quizAnswers).length < quizData.length) {
+        alert("Ответь на все 8 вопросов теста перед завершением работы!");
+        return;
+      }
+
+      let score = 0;
+      quizData.forEach((item, qIdx) => {
+        const chosen = quizAnswers[qIdx];
+        const box = document.getElementById(`quiz-opts-${qIdx}`);
+        box.querySelectorAll(".quiz-opt").forEach((b, oIdx) => {
+          b.classList.remove("selected", "correct", "wrong");
+          if (oIdx === item.correct) b.classList.add("correct");
+          else if (oIdx === chosen && chosen !== item.correct) b.classList.add("wrong");
+        });
+        if (chosen === item.correct) score++;
+      });
+
+      let grade = 2;
+      let label = "Нужно повторить тему";
+      if (score >= 7) { grade = 5; label = "Отлично"; }
+      else if (score >= 5) { grade = 4; label = "Хорошо"; }
+      else if (score >= 4) { grade = 3; label = "Удовлетворительно"; }
+
+      markStepDone(4);
+      const mins = Math.max(1, Math.round(state.secondsElapsed / 60));
+      const d = new Date();
+      const code = `TECH8-3D-${score}${grade}-${d.getDate()}${d.getMonth() + 1}`;
+
+      document.getElementById("certStudentName").textContent = state.studentName || "Ученик 8 класса";
+      document.getElementById("certGradeText").textContent = `Оценка: ${grade} (${label})`;
+      document.getElementById("certStats").textContent = `Правильных ответов: ${score} из ${quizData.length} • Время работы: ~${mins} мин.`;
+      document.getElementById("certCode").textContent = `Код проверки: ${code}`;
+      document.getElementById("certificateSection").style.display = "block";
+      document.getElementById("certificateSection").scrollIntoView({ behavior: "smooth" });
+    }
+
+    function resetAll() {
+      if (confirm("Сбросить прогресс и выполнить работу заново?")) {
+        location.reload();
+      }
+    }
+
+    renderQuiz();
+  </script>
+</body>
+</html>
